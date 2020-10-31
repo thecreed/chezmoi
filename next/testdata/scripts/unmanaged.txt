@@ -1,0 +1,25 @@
+mkhomedir
+mksourcedir
+
+chezmoi unmanaged
+cmp stdout golden/unmanaged
+
+[short] stop
+
+rm $CHEZMOISOURCEDIR/dot_bashrc
+chezmoi unmanaged
+cmp stdout golden/unmanaged-bashrc
+
+rm $CHEZMOISOURCEDIR/private_dot_ssh
+chezmoi unmanaged
+cmp stdout golden/unmanaged-bashrc-ssh
+
+-- golden/unmanaged --
+.local
+-- golden/unmanaged-bashrc --
+.bashrc
+.local
+-- golden/unmanaged-bashrc-ssh --
+.bashrc
+.local
+.ssh

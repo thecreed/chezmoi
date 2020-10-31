@@ -1,0 +1,10 @@
+chezmoi state create
+exists $CHEZMOICONFIGDIR/chezmoistate.boltdb
+
+chezmoi state dump
+stdout scriptOnce
+
+[windows] stop 'file locking is broken on windows' # FIXME
+
+chezmoi --force state reset
+! exists $CHEZMOICONFIGDIR/chezmoistate.boltdb

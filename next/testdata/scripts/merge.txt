@@ -1,0 +1,23 @@
+[windows] stop
+
+chmod 755 bin/vimdiff
+mkhomedir
+mksourcedir
+
+chezmoi merge $HOME${/}.bashrc
+stdout ^${HOME@R}/\.bashrc\s+${CHEZMOISOURCEDIR@R}/dot_bashrc\s+${WORK@R}/.*/\.bashrc$
+
+[short] stop
+
+# test that chezmoi merge falls back to a two-way merge when the template is invalid
+# FIXME the following test fails
+# chezmoi merge $HOME${/}.invalid_template
+# stdout ^${HOME@R}/\.invalid_template\s+${CHEZMOISOURCEDIR}/dot_invalid_template\.tmpl$
+
+-- bin/vimdiff --
+#!/bin/sh
+
+echo "$*"
+-- home/user/.invalid_template --
+-- home/user/.local/share/chezmoi/dot_invalid_template.tmpl --
+{{

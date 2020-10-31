@@ -1,0 +1,6 @@
+mkhomedir
+mksourcedir
+
+symlink $CHEZMOISOURCEDIR/dot_bashrc2 -> dot_bashrc
+chezmoi apply
+cmp $HOME/.bashrc2 $HOME/.bashrc

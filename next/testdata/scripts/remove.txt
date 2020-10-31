@@ -1,0 +1,17 @@
+mkhomedir
+mksourcedir
+
+exists $HOME/.bashrc
+chezmoi remove --force $HOME${/}.bashrc
+! exists $HOME/.bashrc
+
+[short] stop
+
+exists $HOME/.ssh/config
+chezmoi remove --force $HOME${/}.ssh
+! exists $HOME/.ssh/config
+
+exists $HOME/.binary
+! chezmoi remove --force $HOME${/}.inputrc $HOME${/}.binary
+stderr 'not in source state'
+exists $HOME/.binary

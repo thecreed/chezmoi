@@ -1,0 +1,25 @@
+[short] stop
+
+mkhomedir
+
+# test adding a file with --autotemplate
+chezmoi add --autotemplate $HOME${/}.gitconfig
+cmp $CHEZMOISOURCEDIR/dot_gitconfig.tmpl golden/dot_gitconfig.tmpl
+
+# test adding a symlink with --autotemplate
+symlink $HOME/symlink -> symlink-hostname
+chezmoi add --autotemplate $HOME${/}symlink
+cmp $CHEZMOISOURCEDIR/symlink_symlink.tmpl golden/symlink_symlink.tmpl
+
+-- golden/dot_gitconfig.tmpl --
+[core]
+  autocrlf = false
+[user]
+  email = {{ .email }}
+  name = Your Name
+-- golden/symlink_symlink.tmpl --
+symlink-{{ .hostname }}
+-- home/user/.config/chezmoi/chezmoi.toml --
+[data]
+  email = "you@example.com"
+  hostname = "hostname"

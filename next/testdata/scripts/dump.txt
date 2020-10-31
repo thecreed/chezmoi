@@ -1,0 +1,147 @@
+mksourcedir
+
+chezmoi dump --format=json
+cmp stdout golden/dump.json
+
+chezmoi dump --format=json $HOME${/}.bashrc
+cmp stdout golden/dump-bashrc.json
+
+chezmoi dump --format=json $HOME${/}.ssh
+cmp stdout golden/dump-ssh.json
+
+chezmoi dump --format=json --recursive=false $HOME${/}.ssh
+cmp stdout golden/dump-ssh-non-recursive.json
+
+chezmoi dump --format=yaml
+cmp stdout golden/dump.yaml
+
+! chezmoi dump $HOME${/}.inputrc
+stderr 'not in source state'
+
+-- golden/dump.json --
+{
+  ".bashrc": {
+    "type": "file",
+    "name": ".bashrc",
+    "contents": "# contents of .bashrc\n",
+    "perm": 438
+  },
+  ".binary": {
+    "type": "file",
+    "name": ".binary",
+    "contents": "#!/bin/sh\n",
+    "perm": 511
+  },
+  ".exists": {
+    "type": "file",
+    "name": ".exists",
+    "contents": "",
+    "perm": 438
+  },
+  ".gitconfig": {
+    "type": "file",
+    "name": ".gitconfig",
+    "contents": "[core]\n  autocrlf = false\n[user]\n  email = you@example.com\n  name = Your Name\n",
+    "perm": 438
+  },
+  ".hushlogin": {
+    "type": "file",
+    "name": ".hushlogin",
+    "contents": "",
+    "perm": 438
+  },
+  ".ssh": {
+    "type": "dir",
+    "name": ".ssh",
+    "perm": 448
+  },
+  ".ssh/config": {
+    "type": "file",
+    "name": ".ssh/config",
+    "contents": "# contents of .ssh/config\n",
+    "perm": 438
+  },
+  ".symlink": {
+    "type": "symlink",
+    "name": ".symlink",
+    "linkname": ".bashrc"
+  }
+}
+-- golden/dump-bashrc.json --
+{
+  ".bashrc": {
+    "type": "file",
+    "name": ".bashrc",
+    "contents": "# contents of .bashrc\n",
+    "perm": 438
+  }
+}
+-- golden/dump-ssh.json --
+{
+  ".ssh": {
+    "type": "dir",
+    "name": ".ssh",
+    "perm": 448
+  },
+  ".ssh/config": {
+    "type": "file",
+    "name": ".ssh/config",
+    "contents": "# contents of .ssh/config\n",
+    "perm": 438
+  }
+}
+-- golden/dump-ssh-non-recursive.json --
+{
+  ".ssh": {
+    "type": "dir",
+    "name": ".ssh",
+    "perm": 448
+  }
+}
+-- golden/dump.yaml --
+.bashrc:
+    type: file
+    name: .bashrc
+    contents: |
+        # contents of .bashrc
+    perm: 438
+.binary:
+    type: file
+    name: .binary
+    contents: |
+        #!/bin/sh
+    perm: 511
+.exists:
+    type: file
+    name: .exists
+    contents: ""
+    perm: 438
+.gitconfig:
+    type: file
+    name: .gitconfig
+    contents: |
+        [core]
+          autocrlf = false
+        [user]
+          email = you@example.com
+          name = Your Name
+    perm: 438
+.hushlogin:
+    type: file
+    name: .hushlogin
+    contents: ""
+    perm: 438
+.ssh:
+    type: dir
+    name: .ssh
+    perm: 448
+.ssh/config:
+    type: file
+    name: .ssh/config
+    contents: |
+        # contents of .ssh/config
+    perm: 438
+.symlink:
+    type: symlink
+    name: .symlink
+    linkname: .bashrc

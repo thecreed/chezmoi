@@ -1,0 +1,25 @@
+[!exec:tar] stop
+
+mksourcedir
+
+[windows] unix2dos golden/archive
+
+chezmoi archive --output=archive.tar
+exec tar -tf archive.tar
+cmp stdout golden/archive
+
+[short] stop
+
+chezmoi archive --gzip --output=archive.tar.gz
+exec tar -tzf archive.tar.gz
+cmp stdout golden/archive
+
+-- golden/archive --
+.bashrc
+.binary
+.exists
+.gitconfig
+.hushlogin
+.ssh/
+.ssh/config
+.symlink

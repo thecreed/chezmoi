@@ -1,0 +1,18 @@
+mksourcedir
+
+chezmoi source-path
+cmpenv stdout golden/source-path
+
+chezmoi source-path $HOME${/}.bashrc
+cmpenv stdout golden/source-path-bashrc
+
+! chezmoi source-path $HOME${/}.inputrc
+stderr 'not in source state'
+
+! chezmoi source-path $WORK${/}etc${/}passwd
+stderr 'not in destination directory'
+
+-- golden/source-path --
+$CHEZMOISOURCEDIR
+-- golden/source-path-bashrc --
+$CHEZMOISOURCEDIR/dot_bashrc

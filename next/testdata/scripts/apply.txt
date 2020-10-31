@@ -1,0 +1,50 @@
+mkhomedir golden
+mksourcedir
+
+# test --dry-run
+chezmoi apply --dry-run
+! exists $HOME/.bashrc
+! exists $HOME/.binary
+! exists $HOME/.gitconfig
+! exists $HOME/.hushlogin
+! exists $HOME/.ssh
+! exists $HOME/.symlink
+
+# test apply file
+chezmoi apply $HOME${/}.bashrc
+cmp $HOME/.bashrc golden/.bashrc
+! exists $HOME/.binary
+! exists $HOME/.gitconfig
+! exists $HOME/.hushlogin
+! exists $HOME/.ssh
+! exists $HOME/.symlink
+
+[short] stop
+
+# test apply directory, non-recursive
+chezmoi apply --recursive=false $HOME${/}.ssh
+cmp $HOME/.bashrc golden/.bashrc
+! exists $HOME/.binary
+! exists $HOME/.gitconfig
+! exists $HOME/.hushlogin
+exists $HOME/.ssh
+! exists $HOME/.ssh/config
+! exists $HOME/.symlink
+
+# test apply directory
+chezmoi apply $HOME${/}.ssh
+cmp $HOME/.bashrc golden/.bashrc
+! exists $HOME/.binary
+! exists $HOME/.gitconfig
+! exists $HOME/.hushlogin
+cmp $HOME/.ssh/config golden/.ssh/config
+! exists $HOME/.symlink
+
+# test apply all
+chezmoi apply
+cmp $HOME/.bashrc golden/.bashrc
+cmp $HOME/.binary golden/.binary
+cmp $HOME/.gitconfig golden/.gitconfig
+cmp $HOME/.hushlogin golden/.hushlogin
+cmp $HOME/.ssh/config golden/.ssh/config
+cmp $HOME/.symlink golden/.bashrc

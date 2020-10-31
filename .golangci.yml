@@ -10,6 +10,7 @@ linters:
   - errorlint
   - exhaustive
   - exportloopref
+  - gochecknoinits
   - gci
   - gocritic
   - godot
@@ -26,7 +27,6 @@ linters:
   - ineffassign
   - interfacer
   - misspell
-  - nakedret
   - nolintlint
   - prealloc
   - rowserrcheck
@@ -46,7 +46,6 @@ linters:
   - exhaustivestruct
   - funlen
   - gochecknoglobals
-  - gochecknoinits
   - gocognit
   - goconst
   - gocyclo
@@ -55,6 +54,7 @@ linters:
   - gomnd
   - lll
   - maligned
+  - nakedret
   - nestif
   - nlreturn
   - noctx
@@ -85,6 +85,9 @@ issues:
     - gochecknoinits
     path: cmd/
   - linters:
+    - gochecknoinits
+    path: internal/chezmoi/chezmoi_unix.go
+  - linters:
     - gosec
     path: internal/generate-assets/
   - linters:
@@ -93,3 +96,6 @@ issues:
   - linters:
     - scopelint
     path: "_test\\.go"
+  - linters:
+    - goerr113
+    text: "do not define dynamic errors, use wrapped static errors instead"

@@ -1,0 +1,35 @@
+[windows] skip 'UNIX only'
+
+chezmoi apply
+stdout ${HOME@R}
+
+[short] stop
+
+chezmoi dump
+cmp stdout golden/dump.json
+
+chezmoi managed --include=scripts
+cmpenv stdout golden/managed
+
+[!exec:tar] stop
+
+chezmoi archive --gzip --output=archive.tar.gz
+exec tar -tzf archive.tar.gz
+cmp stdout golden/archive
+
+-- golden/archive --
+script
+-- golden/dump.json --
+{
+  "script": {
+    "type": "script",
+    "name": "script",
+    "contents": "#!/bin/sh\n\necho $PWD\n"
+  }
+}
+-- golden/managed --
+$HOME/script
+-- home/user/.local/share/chezmoi/run_script --
+#!/bin/sh
+
+echo $PWD

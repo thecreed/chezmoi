@@ -1,0 +1,9 @@
+mksourcedir
+
+chezmoi forget --force $HOME${/}.bashrc
+! exists $CHEZMOISOURCEDIR/dot_bashrc
+exists $CHEZMOISOURCEDIR/private_dot_ssh
+exists $CHEZMOISOURCEDIR/private_dot_ssh/config
+
+chezmoi forget --force $HOME${/}.ssh
+! exists $CHEZMOISOURCEDIR/private_dot_ssh

@@ -1,0 +1,70 @@
+mksourcedir
+
+exists $CHEZMOISOURCEDIR/dot_bashrc
+chezmoi chattr empty $HOME${/}.bashrc
+! exists $CHEZMOISOURCEDIR/dot_bashrc
+exists $CHEZMOISOURCEDIR/empty_dot_bashrc
+
+[short] stop
+
+chezmoi chattr +p $HOME${/}.bashrc
+! exists $CHEZMOISOURCEDIR/empty_dot_bashrc
+exists $CHEZMOISOURCEDIR/private_empty_dot_bashrc
+
+chezmoi chattr t,-e $HOME${/}.bashrc
+! exists $CHEZMOISOURCEDIR/private_empty_dot_bashrc
+exists $CHEZMOISOURCEDIR/private_dot_bashrc.tmpl
+
+exists $CHEZMOISOURCEDIR/executable_dot_binary
+chezmoi chattr nox $HOME${/}.binary
+! exists $CHEZMOISOURCEDIR/executable_dot_binary
+exists $CHEZMOISOURCEDIR/dot_binary
+
+chezmoi chattr x $HOME${/}.binary
+! exists $CHEZMOISOURCEDIR/dot_binary
+exists $CHEZMOISOURCEDIR/executable_dot_binary
+
+chezmoi chattr +private $HOME${/}.exists
+! exists $CHEZMOISOURCEDIR/exists_dot_exists
+exists $CHEZMOISOURCEDIR/exists_private_dot_exists
+
+chezmoi chattr noprivate $HOME${/}.exists
+! exists $CHEZMOISOURCEDIR/exists_private_dot_exists
+exists $CHEZMOISOURCEDIR/exists_dot_exists
+
+exists $CHEZMOISOURCEDIR/private_dot_ssh
+chezmoi chattr exact $HOME/.ssh
+! exists $CHEZMOISOURCEDIR/private_dot_ssh
+exists $CHEZMOISOURCEDIR/exact_private_dot_ssh
+
+exists $CHEZMOISOURCEDIR/symlink_dot_symlink
+chezmoi chattr +t $HOME${/}.symlink
+! exists $CHEZMOISOURCEDIR/symlink_dot_symlink
+exists $CHEZMOISOURCEDIR/symlink_dot_symlink.tmpl
+
+chezmoi chattr -- -t $HOME${/}.symlink
+! exists $CHEZMOISOURCEDIR/symlink_dot_symlink.tmpl
+exists $CHEZMOISOURCEDIR/symlink_dot_symlink
+
+chezmoi chattr -- first $HOME/script
+! exists $CHEZMOISOURCEDIR/run_script
+exists $CHEZMOISOURCEDIR/run_first_script
+
+chezmoi chattr -- once $HOME/script
+! exists $CHEZMOISOURCEDIR/run_first_script
+exists $CHEZMOISOURCEDIR/run_first_once_script
+
+chezmoi chattr -- last $HOME/script
+! exists $CHEZMOISOURCEDIR/run_first_once_script
+exists $CHEZMOISOURCEDIR/run_last_once_script
+
+chezmoi chattr -- -o $HOME/script
+! exists $CHEZMOISOURCEDIR/run_last_once_script
+exists $CHEZMOISOURCEDIR/run_last_script
+
+chezmoi chattr -- -l $HOME/script
+! exists $CHEZMOISOURCEDIR/run_last_script
+exists $CHEZMOISOURCEDIR/run_script
+
+-- home/user/.local/share/chezmoi/run_script --
+#!/bin/sh

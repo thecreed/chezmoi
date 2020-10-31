@@ -1,0 +1,54 @@
+mksourcedir
+
+chezmoi managed
+cmpenv stdout golden/managed
+
+[short] stop
+
+chezmoi managed --include=all
+cmpenv stdout golden/managed-all
+
+chezmoi managed --include=absent
+cmpenv stdout golden/managed-absent
+
+chezmoi managed --include=dirs
+cmpenv stdout golden/managed-dirs
+
+chezmoi managed --include=files
+cmpenv stdout golden/managed-files
+
+chezmoi managed --include=symlinks
+cmpenv stdout golden/managed-symlinks
+
+-- golden/managed --
+$HOME${/}.bashrc
+$HOME${/}.binary
+$HOME${/}.exists
+$HOME${/}.gitconfig
+$HOME${/}.hushlogin
+$HOME${/}.ssh
+$HOME${/}.ssh${/}config
+$HOME${/}.symlink
+-- golden/managed-all --
+$HOME${/}.absent
+$HOME${/}.bashrc
+$HOME${/}.binary
+$HOME${/}.exists
+$HOME${/}.gitconfig
+$HOME${/}.hushlogin
+$HOME${/}.ssh
+$HOME${/}.ssh${/}config
+$HOME${/}.symlink
+-- golden/managed-absent --
+$HOME${/}.absent
+-- golden/managed-dirs --
+$HOME${/}.ssh
+-- golden/managed-files --
+$HOME${/}.bashrc
+$HOME${/}.binary
+$HOME${/}.exists
+$HOME${/}.gitconfig
+$HOME${/}.hushlogin
+$HOME${/}.ssh${/}config
+-- golden/managed-symlinks --
+$HOME${/}.symlink

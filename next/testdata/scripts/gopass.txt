@@ -1,0 +1,32 @@
+[!windows] chmod 755 bin/gopass
+[windows] unix2dos bin/gopass.cmd
+
+chezmoi execute-template '{{ gopass "misc/example.com" }}'
+stdout examplepassword
+
+-- bin/gopass --
+#!/bin/sh
+
+case "$*" in
+"show --password misc/example.com")
+    echo "examplepassword"
+    ;;
+"--version")
+    echo "gopass 1.10.1 go1.15 linux amd64"
+    ;;
+*)
+    echo "gopass: invalid command: $*"
+    exit 1
+esac
+-- bin/gopass.cmd --
+@echo off
+IF "%*" == "show --password misc/example.com" (
+    echo | set /p=examplepassword
+    exit /b 0
+) ELSE IF "$*" == "--version" (
+    echo "gopass 1.10.1 go1.15 windows amd64"
+    exit /b 0
+) ELSE (
+    echo gopass: invalid command: %*
+    exit /b 1
+)
