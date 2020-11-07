@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"regexp"
 	"sort"
@@ -52,36 +51,6 @@ func getDefaultSourceDir(bds *xdg.BaseDirectorySpecification) osPath {
 	}
 	// Fallback to XDG Base Directory Specification default.
 	return osPath(filepath.Join(bds.DataHome, "chezmoi"))
-}
-
-// getEditor returns the path to the user's editor and any extra arguments.
-func getEditor() (string, []string) {
-	// FIXME consider other heuristics for handling spaces
-	// FIXME consider different behavior on Windows
-
-	// Prefer $VISUAL over $EDITOR and fallback to vi.
-	editor := firstNonEmptyString(
-		os.Getenv("VISUAL"),
-		os.Getenv("EDITOR"),
-		"vi",
-	)
-
-	// If editor is found, return it.
-	if path, err := exec.LookPath(editor); err == nil {
-		return path, nil
-	}
-
-	// Otherwise, if editor contains spaces, then assume that the first word is
-	// the editor and the rest are arguments.
-	components := whitespaceRegexp.Split(editor, -1)
-	if len(components) > 1 {
-		if path, err := exec.LookPath(components[0]); err == nil {
-			return path, components[1:]
-		}
-	}
-
-	// Fallback to editor only.
-	return editor, nil
 }
 
 // isWellKnownAbbreviation returns true if word is a well known abbreviation.

@@ -87,6 +87,7 @@ type Config struct {
 	// Command configurations, settable in the config file.
 	CD    cdCmdConfig
 	Diff  diffCmdConfig
+	Edit  editCmdConfig
 	Git   gitCmdConfig
 	Merge mergeCmdConfig
 
@@ -95,7 +96,6 @@ type Config struct {
 	apply           applyCmdConfig
 	archive         archiveCmdConfig
 	dump            dumpCmdConfig
-	edit            editCmdConfig
 	executeTemplate executeTemplateCmdConfig
 	init            initCmdConfig
 	managed         managedCmdConfig
@@ -190,6 +190,9 @@ func newConfig(options ...configOption) (*Config, error) {
 			NoPager: false,
 			Pager:   "",
 		},
+		Edit: editCmdConfig{
+			include: chezmoi.NewIncludeSet(chezmoi.IncludeDirs | chezmoi.IncludeFiles | chezmoi.IncludeSymlinks),
+		},
 		Git: gitCmdConfig{
 			Command:    "git",
 			AutoAdd:    false,
@@ -244,9 +247,6 @@ func newConfig(options ...configOption) (*Config, error) {
 		dump: dumpCmdConfig{
 			include:   chezmoi.NewIncludeSet(chezmoi.IncludeAll),
 			recursive: true,
-		},
-		edit: editCmdConfig{
-			include: chezmoi.NewIncludeSet(chezmoi.IncludeDirs | chezmoi.IncludeFiles | chezmoi.IncludeSymlinks),
 		},
 		managed: managedCmdConfig{
 			include: chezmoi.NewIncludeSet(chezmoi.IncludeDirs | chezmoi.IncludeFiles | chezmoi.IncludeSymlinks),
@@ -465,6 +465,38 @@ func (c *Config) getDestPathInfos(sourceState *chezmoi.SourceState, args []strin
 		}
 	}
 	return destPathInfos, nil
+}
+
+// getEditor returns the path to the user's editor and any extra arguments.
+func (c *Config) getEditor() (string, []string) {
+	// If the user has set and edit command then use it.
+	if c.Edit.Command != "" {
+		return c.Edit.Command, c.Edit.Args
+	}
+
+	// Prefer $VISUAL over $EDITOR and fallback to vi.
+	editor := firstNonEmptyString(
+		os.Getenv("VISUAL"),
+		os.Getenv("EDITOR"),
+		"vi",
+	)
+
+	// If editor is found, return it.
+	if path, err := exec.LookPath(editor); err == nil {
+		return path, nil
+	}
+
+	// Otherwise, if editor contains spaces, then assume that the first word is
+	// the editor and the rest are arguments.
+	components := whitespaceRegexp.Split(editor, -1)
+	if len(components) > 1 {
+		if path, err := exec.LookPath(components[0]); err == nil {
+			return path, components[1:]
+		}
+	}
+
+	// Fallback to editor only.
+	return editor, nil
 }
 
 func (c *Config) getPersistentState(options *bolt.Options) (chezmoi.PersistentState, error) {
@@ -912,7 +944,7 @@ func (c *Config) run(dir, name string, args []string) error {
 }
 
 func (c *Config) runEditor(args []string) error {
-	editor, editorArgs := getEditor()
+	editor, editorArgs := c.getEditor()
 	return c.run("", editor, append(editorArgs, args...))
 }
 

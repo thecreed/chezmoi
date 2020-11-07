@@ -101,7 +101,7 @@ func (c *Config) newDoctorCmd() *cobra.Command {
 
 func (c *Config) runDoctorCmd(cmd *cobra.Command, args []string) error {
 	shell, _ := shell.CurrentUserShell()
-	editor, _ := getEditor()
+	editor, _ := c.getEditor()
 	checks := []check{
 		&versionCheck{
 			versionInfo: c.versionInfo,

@@ -7,6 +7,8 @@ import (
 )
 
 type editCmdConfig struct {
+	Command   string
+	Args      []string
 	apply     bool
 	include   *chezmoi.IncludeSet
 	recursive bool
@@ -28,7 +30,7 @@ func (c *Config) newEditCmd() *cobra.Command {
 	}
 
 	persistentFlags := editCmd.PersistentFlags()
-	persistentFlags.BoolVarP(&c.edit.apply, "apply", "a", c.edit.apply, "apply edit after editing")
+	persistentFlags.BoolVarP(&c.Edit.apply, "apply", "a", c.Edit.apply, "apply edit after editing")
 
 	return editCmd
 }
@@ -51,9 +53,9 @@ func (c *Config) runEditCmd(cmd *cobra.Command, args []string, s *chezmoi.Source
 		return err
 	}
 
-	if !c.edit.apply {
+	if !c.Edit.apply {
 		return nil
 	}
 
-	return c.applyArgs(c.destSystem, c.absDestDir, args, c.edit.include, c.edit.recursive, c.Umask.FileMode())
+	return c.applyArgs(c.destSystem, c.absDestDir, args, c.Edit.include, c.Edit.recursive, c.Umask.FileMode())
 }
