@@ -1,11 +1,13 @@
 package chezmoi
 
 // FIXME fix integration test and code
-// FIXME add integration build flag
 
 import (
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"runtime"
 	"testing"
 
@@ -16,6 +18,9 @@ import (
 var _ EncryptionTool = &GPGEncryptionTool{}
 
 func TestGPGEncryptionTool(t *testing.T) {
+	if _, err := exec.LookPath("gpg"); errors.Is(err, exec.ErrNotFound) {
+		t.Skip(fmt.Sprintf("gpg: %v", err))
+	}
 	t.Skip("broken test")
 
 	tempDir, err := ioutil.TempDir("", "chezmoi-test-gpg-encryption-tool")
