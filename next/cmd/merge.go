@@ -71,7 +71,7 @@ func (c *Config) runMergeCmd(cmd *cobra.Command, args []string, sourceState *che
 			return err
 		}
 		targetStatePath := path.Join(tempDir, path.Base(targetName))
-		if err := ioutil.WriteFile(targetStatePath, contents, 0o600); err != nil {
+		if err := c.baseSystem.WriteFile(targetStatePath, contents, 0o600); err != nil {
 			return err
 		}
 		args := append(

@@ -52,5 +52,5 @@ func (s *RealSystem) WriteFile(filename string, data []byte, perm os.FileMode) e
 		return t.CloseAtomicallyReplace()
 	}
 
-	return WriteFile(s.FS, filename, data, perm)
+	return writeFile(s.FS, filename, data, perm)
 }

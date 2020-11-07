@@ -118,10 +118,10 @@ func (s *RealSystem) WriteSymlink(oldname, newname string) error {
 	return s.FS.Symlink(oldname, newname)
 }
 
-// WriteFile is like ioutil.WriteFile but always sets perm before writing data.
-// ioutil.WriteFile only sets the permissions when creating a new file. We need
+// writeFile is like ioutil.writeFile but always sets perm before writing data.
+// ioutil.writeFile only sets the permissions when creating a new file. We need
 // to ensure permissions, so we use our own implementation.
-func WriteFile(fs vfs.FS, filename string, data []byte, perm os.FileMode) (err error) {
+func writeFile(fs vfs.FS, filename string, data []byte, perm os.FileMode) (err error) {
 	// Create a new file, or truncate any existing one.
 	f, err := fs.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, perm)
 	if err != nil {

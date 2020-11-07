@@ -723,7 +723,7 @@ func (s *SourceState) executeTemplate(path string) ([]byte, error) {
 
 func (s *SourceState) newSourceStateDir(sourcePath string, da DirAttributes) *SourceStateDir {
 	targetStateDir := &TargetStateDir{
-		perm: da.Perm(),
+		perm: da.perm(),
 	}
 	return &SourceStateDir{
 		path:             sourcePath,
@@ -765,7 +765,7 @@ func (s *SourceState) newSourceStateFile(sourcePath string, fa FileAttributes, t
 			}
 			return &TargetStateFile{
 				lazyContents: newLazyContents(contents),
-				perm:         fa.Perm(),
+				perm:         fa.perm(),
 			}, nil
 		}
 	case SourceFileTypePresent:
@@ -782,7 +782,7 @@ func (s *SourceState) newSourceStateFile(sourcePath string, fa FileAttributes, t
 			}
 			return &TargetStatePresent{
 				lazyContents: newLazyContents(contents),
-				perm:         fa.Perm(),
+				perm:         fa.perm(),
 			}, nil
 		}
 	case SourceFileTypeScript:

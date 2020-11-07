@@ -80,8 +80,8 @@ func (da DirAttributes) BaseName() string {
 	return sourceName
 }
 
-// Perm returns da's file mode.
-func (da DirAttributes) Perm() os.FileMode {
+// perm returns da's file mode.
+func (da DirAttributes) perm() os.FileMode {
 	perm := os.FileMode(0o777)
 	if da.Private {
 		perm &^= 0o77
@@ -227,8 +227,8 @@ func (fa FileAttributes) BaseName() string {
 	return sourceName
 }
 
-// Perm returns fa's permissions.
-func (fa FileAttributes) Perm() os.FileMode {
+// perm returns fa's permissions.
+func (fa FileAttributes) perm() os.FileMode {
 	perm := os.FileMode(0o666)
 	if fa.Executable {
 		perm |= 0o111
