@@ -27,9 +27,9 @@ func (b byValueLength) Less(i, j int) bool {
 func (b byValueLength) Swap(i, j int) { b[i], b[j] = b[j], b[i] }
 
 func autoTemplate(contents []byte, data map[string]interface{}) []byte {
-	// FIXME this naive approach will generate incorrect templates if the
-	// variable names match variable values
-	// FIXME the algorithm here is probably O(N^2), we can do better
+	// This naive approach will generate incorrect templates if the variable
+	// names match variable values. The algorithm here is probably O(N^2), we
+	// can do better.
 	variables := extractVariables(nil, nil, data)
 	sort.Sort(sort.Reverse(byValueLength(variables)))
 	contentsStr := string(contents)
