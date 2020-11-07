@@ -136,7 +136,7 @@ type AddOptions struct {
 	umask        os.FileMode
 }
 
-// Add adds sourceStateEntry to s.
+// Add adds destPathInfos to s.
 func (s *SourceState) Add(sourceSystem System, destPathInfos map[string]os.FileInfo, options *AddOptions) error {
 	destPaths := make([]string, 0, len(destPathInfos))
 	for destPath := range destPathInfos {
@@ -254,13 +254,6 @@ func (s *SourceState) AddDestPathInfos(destPathInfos map[string]os.FileInfo, lst
 	}
 }
 
-// ApplyOptions are options to SourceState.ApplyAll and SourceState.ApplyOne.
-type ApplyOptions struct {
-	Include     *IncludeSet
-	Umask       os.FileMode
-	UpdateState bool
-}
-
 // AllTargetNames returns all of s's target names in order.
 func (s *SourceState) AllTargetNames() []string {
 	targetNames := make([]string, 0, len(s.entries))
@@ -282,7 +275,14 @@ func (s *SourceState) AllTargetNames() []string {
 	return targetNames
 }
 
-// ApplyOne updates targetName in targetDir on fs to match s using s.
+// ApplyOptions are options to SourceState.ApplyAll and SourceState.ApplyOne.
+type ApplyOptions struct {
+	Include     *IncludeSet
+	Umask       os.FileMode
+	UpdateState bool
+}
+
+// ApplyOne updates targetName in targetDir in targetSystem to match s.
 func (s *SourceState) ApplyOne(targetSystem System, targetDir, targetName string, options ApplyOptions) error {
 	targetStateEntry, err := s.entries[targetName].TargetStateEntry()
 	if err != nil {
