@@ -11,18 +11,18 @@ import (
 // A stringSet is a set of strings.
 type stringSet map[string]struct{}
 
-// An PatternSet is a set of patterns.
-type PatternSet struct {
+// An patternSet is a set of patterns.
+type patternSet struct {
 	includePatterns stringSet
 	excludePatterns stringSet
 }
 
-// A PatternSetOption sets an option on a pattern set.
-type PatternSetOption func(*PatternSet)
+// A patternSetOption sets an option on a pattern set.
+type patternSetOption func(*patternSet)
 
-// NewPatternSet returns a new PatternSet.
-func NewPatternSet(options ...PatternSetOption) *PatternSet {
-	ps := &PatternSet{
+// newPatternSet returns a new patternSet.
+func newPatternSet(options ...patternSetOption) *patternSet {
+	ps := &patternSet{
 		includePatterns: newStringSet(),
 		excludePatterns: newStringSet(),
 	}
@@ -33,7 +33,7 @@ func NewPatternSet(options ...PatternSetOption) *PatternSet {
 }
 
 // Add adds a pattern to ps.
-func (ps *PatternSet) Add(pattern string, include bool) error {
+func (ps *patternSet) Add(pattern string, include bool) error {
 	if _, err := doublestar.Match(pattern, ""); err != nil {
 		return err
 	}
@@ -46,7 +46,7 @@ func (ps *PatternSet) Add(pattern string, include bool) error {
 }
 
 // Glob returns all matches in fs.
-func (ps *PatternSet) Glob(fs vfs.FS, prefix string) ([]string, error) {
+func (ps *patternSet) Glob(fs vfs.FS, prefix string) ([]string, error) {
 	vos := doubleStarOS{FS: fs}
 	allMatches := newStringSet()
 	for includePattern := range ps.includePatterns {
@@ -76,7 +76,7 @@ func (ps *PatternSet) Glob(fs vfs.FS, prefix string) ([]string, error) {
 }
 
 // Match returns if name matches any pattern in ps.
-func (ps *PatternSet) Match(name string) bool {
+func (ps *patternSet) Match(name string) bool {
 	for pattern := range ps.excludePatterns {
 		if ok, _ := doublestar.Match(pattern, name); ok {
 			return false

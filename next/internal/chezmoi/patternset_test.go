@@ -8,22 +8,22 @@ import (
 	"github.com/twpayne/go-vfs/vfst"
 )
 
-func TestPatternSet(t *testing.T) {
+func TestpatternSet(t *testing.T) {
 	for _, tc := range []struct {
 		name          string
-		ps            *PatternSet
+		ps            *patternSet
 		expectMatches map[string]bool
 	}{
 		{
 			name: "empty",
-			ps:   NewPatternSet(),
+			ps:   newPatternSet(),
 			expectMatches: map[string]bool{
 				"foo": false,
 			},
 		},
 		{
 			name: "exact",
-			ps: mustNewPatternSet(t, map[string]bool{
+			ps: mustnewPatternSet(t, map[string]bool{
 				"foo": true,
 			}),
 			expectMatches: map[string]bool{
@@ -33,7 +33,7 @@ func TestPatternSet(t *testing.T) {
 		},
 		{
 			name: "wildcard",
-			ps: mustNewPatternSet(t, map[string]bool{
+			ps: mustnewPatternSet(t, map[string]bool{
 				"b*": true,
 			}),
 			expectMatches: map[string]bool{
@@ -44,7 +44,7 @@ func TestPatternSet(t *testing.T) {
 		},
 		{
 			name: "exclude",
-			ps: mustNewPatternSet(t, map[string]bool{
+			ps: mustnewPatternSet(t, map[string]bool{
 				"b*":  true,
 				"baz": false,
 			}),
@@ -56,7 +56,7 @@ func TestPatternSet(t *testing.T) {
 		},
 		{
 			name: "doublestar",
-			ps: mustNewPatternSet(t, map[string]bool{
+			ps: mustnewPatternSet(t, map[string]bool{
 				"**/foo": true,
 			}),
 			expectMatches: map[string]bool{
@@ -74,22 +74,22 @@ func TestPatternSet(t *testing.T) {
 	}
 }
 
-func TestPatternSetGlob(t *testing.T) {
+func TestpatternSetGlob(t *testing.T) {
 	for _, tc := range []struct {
 		name            string
-		ps              *PatternSet
+		ps              *patternSet
 		root            interface{}
 		expectedMatches []string
 	}{
 		{
 			name:            "empty",
-			ps:              NewPatternSet(),
+			ps:              newPatternSet(),
 			root:            nil,
 			expectedMatches: []string{},
 		},
 		{
 			name: "simple",
-			ps: mustNewPatternSet(t, map[string]bool{
+			ps: mustnewPatternSet(t, map[string]bool{
 				"f*": true,
 			}),
 			root: map[string]interface{}{
@@ -101,7 +101,7 @@ func TestPatternSetGlob(t *testing.T) {
 		},
 		{
 			name: "include_exclude",
-			ps: mustNewPatternSet(t, map[string]bool{
+			ps: mustnewPatternSet(t, map[string]bool{
 				"b*": true,
 				"*z": false,
 			}),
@@ -115,7 +115,7 @@ func TestPatternSetGlob(t *testing.T) {
 		},
 		{
 			name: "doublestar",
-			ps: mustNewPatternSet(t, map[string]bool{
+			ps: mustnewPatternSet(t, map[string]bool{
 				"**/f*": true,
 			}),
 			root: map[string]interface{}{
@@ -138,8 +138,8 @@ func TestPatternSetGlob(t *testing.T) {
 	}
 }
 
-func mustNewPatternSet(t *testing.T, patterns map[string]bool) *PatternSet {
-	ps := NewPatternSet()
+func mustnewPatternSet(t *testing.T, patterns map[string]bool) *patternSet {
+	ps := newPatternSet()
 	for pattern, exclude := range patterns {
 		require.NoError(t, ps.Add(pattern, exclude))
 	}

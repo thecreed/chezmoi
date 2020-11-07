@@ -30,7 +30,7 @@ type SourceState struct {
 	destDir              string
 	umask                os.FileMode
 	encryptionTool       EncryptionTool
-	ignore               *PatternSet
+	ignore               *patternSet
 	minVersion           semver.Version
 	priorityTemplateData map[string]interface{}
 	templateData         map[string]interface{}
@@ -113,7 +113,7 @@ func NewSourceState(options ...SourceStateOption) *SourceState {
 		entries:              make(map[string]SourceStateEntry),
 		umask:                GetUmask(),
 		encryptionTool:       &nullEncryptionTool{},
-		ignore:               NewPatternSet(),
+		ignore:               newPatternSet(),
 		priorityTemplateData: make(map[string]interface{}),
 		templateData:         make(map[string]interface{}),
 		templateOptions:      DefaultTemplateOptions,
@@ -448,7 +448,7 @@ func (s *SourceState) Read() error {
 		case info.Name() == removeName:
 			// The comment about .chezmoiignore and templates applies to
 			// .chezmoiremove too.
-			removePatterns := NewPatternSet()
+			removePatterns := newPatternSet()
 			if err := s.addPatterns(removePatterns, sourcePath, targetDirName); err != nil {
 				return err
 			}
@@ -597,7 +597,7 @@ func (s *SourceState) TemplateData() map[string]interface{} {
 	return s.templateData
 }
 
-func (s *SourceState) addPatterns(patternSet *PatternSet, sourcePath, relPath string) error {
+func (s *SourceState) addPatterns(patternSet *patternSet, sourcePath, relPath string) error {
 	data, err := s.executeTemplate(sourcePath)
 	if err != nil {
 		return err
