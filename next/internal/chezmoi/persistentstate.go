@@ -99,7 +99,7 @@ func (s *dryRunPersistentState) ForEach(bucket []byte, fn func(k, v []byte) erro
 }
 
 func (s *dryRunPersistentState) OpenOrCreate() error {
-	s.modified = true // FIXME this will give false naegatives if s.s already exists, need to separate create from open
+	s.modified = true // FIXME this will give false negatives if s.s already exists, need to separate create from open
 	return s.s.OpenOrCreate()
 }
 

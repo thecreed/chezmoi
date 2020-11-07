@@ -19,7 +19,8 @@ General:
 - No more `--prompt` to `chezmoi edit`
 - `--keep-going` global
 - `chezmoi init` guesses your repo if you use github.com and dotfiles
-- `edit.command` and `edit.args` settable in config file
+- `edit.command` and `edit.args` settable in config file, overrides `$EDITOR` / `$VISUAL`
+- state data has changed, `run_once_` scripts will be run again
 
 Config file:
 - rename `sourceVCS` to `git`

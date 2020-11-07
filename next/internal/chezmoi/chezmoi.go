@@ -14,7 +14,7 @@ var (
 	DefaultTemplateOptions = []string{"missingkey=error"}
 
 	EntryStateBucket      = []byte("entryState")
-	ScriptOnceStateBucket = []byte("script") // FIXME scriptOnce
+	ScriptOnceStateBucket = []byte("scriptOnce")
 )
 
 // Suffixes and prefixes.

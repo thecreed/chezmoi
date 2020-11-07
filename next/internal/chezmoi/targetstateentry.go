@@ -67,8 +67,8 @@ type TargetStateSymlink struct {
 
 // A scriptOnceState records the state of a script that should only be run once.
 type scriptOnceState struct {
-	Name       string    `json:"name" toml:"name" yaml:"name"`
-	ExecutedAt time.Time `json:"executedAt" toml:"executedAt" yaml:"executedAt"` // FIXME should be runAt?
+	Name  string    `json:"name" toml:"name" yaml:"name"`
+	RunAt time.Time `json:"runAt" toml:"runAt" yaml:"runAt"`
 }
 
 // Equal returns true if es is equal to other.
@@ -308,8 +308,8 @@ func (t *TargetStateScript) Apply(s System, destStateEntry DestStateEntry, umask
 	}
 	if t.once {
 		value, err := json.Marshal(&scriptOnceState{
-			Name:       t.name,
-			ExecutedAt: executedAt,
+			Name:  t.name,
+			RunAt: executedAt,
 		})
 		if err != nil {
 			return err

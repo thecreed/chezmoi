@@ -24,11 +24,10 @@ cmp $CHEZMOISOURCEDIR/empty_dot_hushlogin golden/empty_dot_hushlogin
 chezmoi add $HOME${/}.symlink
 cmp $CHEZMOISOURCEDIR/symlink_dot_symlink golden/symlink_dot_symlink
 
+[windows] stop 'remaining tests use file modes'
+
 # test adding a private directory
 chezmoi add $HOME${/}.ssh
-[!windows] exists $CHEZMOISOURCEDIR/private_dot_ssh
-[windows] exists $CHEZMOISOURCEDIR/dot_ssh
-stop # FIXME
 cmp $CHEZMOISOURCEDIR/private_dot_ssh/config $HOME/.ssh/config
 
 stop # FIXME
