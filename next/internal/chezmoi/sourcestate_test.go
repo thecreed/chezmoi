@@ -783,7 +783,7 @@ func TestSourceStateRead(t *testing.T) {
 			},
 			expectedSourceState: NewSourceState(
 				withIgnore(
-					mustnewPatternSet(t, map[string]bool{
+					mustNewPatternSet(t, map[string]bool{
 						"README.md": true,
 					}),
 				),
@@ -799,7 +799,7 @@ func TestSourceStateRead(t *testing.T) {
 			},
 			expectedSourceState: NewSourceState(
 				withIgnore(
-					mustnewPatternSet(t, map[string]bool{
+					mustNewPatternSet(t, map[string]bool{
 						"README.md": true,
 					}),
 				),
@@ -853,7 +853,7 @@ func TestSourceStateRead(t *testing.T) {
 					},
 				}),
 				withIgnore(
-					mustnewPatternSet(t, map[string]bool{
+					mustNewPatternSet(t, map[string]bool{
 						"dir/baz": true,
 					}),
 				),
@@ -894,7 +894,7 @@ func TestSourceStateRead(t *testing.T) {
 					},
 				}),
 				withIgnore(
-					mustnewPatternSet(t, map[string]bool{
+					mustNewPatternSet(t, map[string]bool{
 						"baz": true,
 					}),
 				),

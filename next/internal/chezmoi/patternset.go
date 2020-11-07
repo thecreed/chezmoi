@@ -32,21 +32,21 @@ func newPatternSet(options ...patternSetOption) *patternSet {
 	return ps
 }
 
-// Add adds a pattern to ps.
-func (ps *patternSet) Add(pattern string, include bool) error {
+// add adds a pattern to ps.
+func (ps *patternSet) add(pattern string, include bool) error {
 	if _, err := doublestar.Match(pattern, ""); err != nil {
 		return err
 	}
 	if include {
-		ps.includePatterns.Add(pattern)
+		ps.includePatterns.add(pattern)
 	} else {
-		ps.excludePatterns.Add(pattern)
+		ps.excludePatterns.add(pattern)
 	}
 	return nil
 }
 
-// Glob returns all matches in fs.
-func (ps *patternSet) Glob(fs vfs.FS, prefix string) ([]string, error) {
+// glob returns all matches in fs.
+func (ps *patternSet) glob(fs vfs.FS, prefix string) ([]string, error) {
 	vos := doubleStarOS{FS: fs}
 	allMatches := newStringSet()
 	for includePattern := range ps.includePatterns {
@@ -54,7 +54,7 @@ func (ps *patternSet) Glob(fs vfs.FS, prefix string) ([]string, error) {
 		if err != nil {
 			return nil, err
 		}
-		allMatches.Add(matches...)
+		allMatches.add(matches...)
 	}
 	for match := range allMatches {
 		for excludePattern := range ps.excludePatterns {
@@ -67,7 +67,7 @@ func (ps *patternSet) Glob(fs vfs.FS, prefix string) ([]string, error) {
 			}
 		}
 	}
-	matchesSlice := allMatches.Elements()
+	matchesSlice := allMatches.elements()
 	for i, match := range matchesSlice {
 		matchesSlice[i] = mustTrimPrefix(filepath.ToSlash(match), prefix)
 	}
@@ -75,8 +75,8 @@ func (ps *patternSet) Glob(fs vfs.FS, prefix string) ([]string, error) {
 	return matchesSlice, nil
 }
 
-// Match returns if name matches any pattern in ps.
-func (ps *patternSet) Match(name string) bool {
+// match returns if name matches any pattern in ps.
+func (ps *patternSet) match(name string) bool {
 	for pattern := range ps.excludePatterns {
 		if ok, _ := doublestar.Match(pattern, name); ok {
 			return false
@@ -93,19 +93,19 @@ func (ps *patternSet) Match(name string) bool {
 // newStringSet returns a new StringSet containing elements.
 func newStringSet(elements ...string) stringSet {
 	s := make(stringSet)
-	s.Add(elements...)
+	s.add(elements...)
 	return s
 }
 
-// Add adds elements to s.
-func (s stringSet) Add(elements ...string) {
+// add adds elements to s.
+func (s stringSet) add(elements ...string) {
 	for _, element := range elements {
 		s[element] = struct{}{}
 	}
 }
 
-// Elements returns all the elements of s.
-func (s stringSet) Elements() []string {
+// elements returns all the elements of s.
+func (s stringSet) elements() []string {
 	elements := make([]string, 0, len(s))
 	for element := range s {
 		elements = append(elements, element)

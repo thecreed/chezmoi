@@ -328,7 +328,7 @@ func (s *SourceState) Entries() map[string]SourceStateEntry {
 
 // Ignored returns if targetName is ignored.
 func (s *SourceState) Ignored(targetName string) bool {
-	return s.ignore.Match(targetName)
+	return s.ignore.match(targetName)
 }
 
 // TargetNames returns all of s's target names in alphabetical order.
@@ -452,13 +452,13 @@ func (s *SourceState) Read() error {
 			if err := s.addPatterns(removePatterns, sourcePath, targetDirName); err != nil {
 				return err
 			}
-			matches, err := removePatterns.Glob(s.system.UnderlyingFS(), s.destDir+"/")
+			matches, err := removePatterns.glob(s.system.UnderlyingFS(), s.destDir+"/")
 			if err != nil {
 				return err
 			}
 			n := 0
 			for _, match := range matches {
-				if !s.ignore.Match(match) {
+				if !s.ignore.match(match) {
 					matches[n] = match
 					n++
 				}
@@ -488,7 +488,7 @@ func (s *SourceState) Read() error {
 		case info.IsDir():
 			da := parseDirAttributes(sourceName)
 			targetName := path.Join(targetDirName, da.Name)
-			if s.ignore.Match(targetName) {
+			if s.ignore.match(targetName) {
 				return nil
 			}
 			sourceStateEntry := s.newSourceStateDir(sourcePath, da)
@@ -497,7 +497,7 @@ func (s *SourceState) Read() error {
 		case info.Mode().IsRegular():
 			fa := parseFileAttributes(sourceName)
 			targetName := path.Join(targetDirName, fa.Name)
-			if s.ignore.Match(targetName) {
+			if s.ignore.match(targetName) {
 				return nil
 			}
 			sourceStateEntry := s.newSourceStateFile(sourcePath, fa, targetName)
@@ -515,7 +515,7 @@ func (s *SourceState) Read() error {
 
 	// Remove all ignored targets.
 	for targetName := range allSourceStateEntries {
-		if s.ignore.Match(targetName) {
+		if s.ignore.match(targetName) {
 			delete(allSourceStateEntries, targetName)
 		}
 	}
@@ -547,7 +547,7 @@ func (s *SourceState) Read() error {
 				if _, ok := allSourceStateEntries[targetEntryName]; ok {
 					continue
 				}
-				if s.ignore.Match(targetEntryName) {
+				if s.ignore.match(targetEntryName) {
 					continue
 				}
 				allSourceStateEntries[targetEntryName] = append(allSourceStateEntries[targetEntryName], sourceStateRemove)
@@ -621,7 +621,7 @@ func (s *SourceState) addPatterns(patternSet *patternSet, sourcePath, relPath st
 			text = mustTrimPrefix(text, "!")
 		}
 		pattern := path.Join(dir, text)
-		if err := patternSet.Add(pattern, include); err != nil {
+		if err := patternSet.add(pattern, include); err != nil {
 			return fmt.Errorf("%s:%d: %w", sourcePath, lineNumber, err)
 		}
 	}
