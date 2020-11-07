@@ -21,6 +21,7 @@ General:
 - `chezmoi init` guesses your repo if you use github.com and dotfiles
 - `edit.command` and `edit.args` settable in config file, overrides `$EDITOR` / `$VISUAL`
 - state data has changed, `run_once_` scripts will be run again
+- `run_once_` scripts with same content but different names will only be run once
 
 Config file:
 - rename `sourceVCS` to `git`

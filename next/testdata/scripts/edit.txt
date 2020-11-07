@@ -21,8 +21,13 @@ chezmoi edit $HOME${/}.bashrc $HOME${/}.symlink
 grep -count=3 '# edited' $CHEZMOISOURCEDIR/dot_bashrc
 grep -count=2 '# edited' $CHEZMOISOURCEDIR/symlink_dot_symlink
 
-# FIXME refine edit directory test
-! chezmoi edit $HOME${/}.ssh
+[windows] stop 'remaining tests need update to editor.cmd' # FIXME
+chezmoi edit
+exists $CHEZMOISOURCEDIR/.edited
+
+[windows] stop 'remaining tests use file modes'
+chezmoi edit $HOME${/}.ssh
+exists $CHEZMOISOURCEDIR/private_dot_ssh/.edited
 
 # FIXME --apply tests
 

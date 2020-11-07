@@ -342,11 +342,15 @@ func setup(env *testscript.Env) error {
 			"editor": &vfst.File{
 				Perm: 0o755,
 				Contents: []byte(strings.Join([]string{
-					"#!/bin/sh",
-					"",
-					"for filename in $*; do",
-					"    echo '# edited' >> $filename",
-					"done",
+					`#!/bin/sh`,
+					``,
+					`for name in $*; do`,
+					`    if [ -d $name ]; then`,
+					`        touch $name/.edited`,
+					`    else`,
+					`        echo "# edited" >> $name`,
+					`    fi`,
+					`done`,
 				}, "\n")),
 			},
 			// shell is a non-interactive script that appends the directory in

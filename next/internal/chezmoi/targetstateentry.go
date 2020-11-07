@@ -284,9 +284,7 @@ func (t *TargetStateScript) Apply(s System, destStateEntry DestStateEntry, umask
 		if err != nil {
 			return err
 		}
-		// FIXME the following assumes that the script name is part of the script state
-		// FIXME maybe it shouldn't be
-		key = []byte(t.name + ":" + hex.EncodeToString(contentsSHA256))
+		key = []byte(hex.EncodeToString(contentsSHA256))
 		scriptOnceState, err := s.PersistentState().Get(ScriptOnceStateBucket, key)
 		if err != nil {
 			return err
