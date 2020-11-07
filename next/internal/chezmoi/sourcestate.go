@@ -349,6 +349,7 @@ func (s *SourceState) Entry(targetName string) (SourceStateEntry, bool) {
 
 // Evaluate evaluates every target state entry in s.
 func (s *SourceState) Evaluate() error {
+	// FIXME do we need to add KeepGoing?
 	for _, targetName := range s.AllTargetNames() {
 		sourceStateEntry := s.entries[targetName]
 		if err := sourceStateEntry.Evaluate(); err != nil {
@@ -367,7 +368,10 @@ func (s *SourceState) Evaluate() error {
 
 // ExecuteTemplateData returns the result of executing template data.
 func (s *SourceState) ExecuteTemplateData(name string, data []byte) ([]byte, error) {
-	tmpl, err := template.New(name).Option(s.templateOptions...).Funcs(s.templateFuncs).Parse(string(data))
+	tmpl, err := template.New(name).
+		Option(s.templateOptions...).
+		Funcs(s.templateFuncs).
+		Parse(string(data))
 	if err != nil {
 		return nil, err
 	}
@@ -377,11 +381,11 @@ func (s *SourceState) ExecuteTemplateData(name string, data []byte) ([]byte, err
 			return nil, err
 		}
 	}
-	output := &bytes.Buffer{}
-	if err = tmpl.ExecuteTemplate(output, name, s.TemplateData()); err != nil {
+	var sb strings.Builder
+	if err = tmpl.ExecuteTemplate(&sb, name, s.TemplateData()); err != nil {
 		return nil, err
 	}
-	return output.Bytes(), nil
+	return []byte(sb.String()), nil
 }
 
 // MinVersion returns the minimum version for which s is valid.
@@ -650,7 +654,6 @@ func (s *SourceState) addTemplateData(sourcePath string) error {
 
 // addTemplatesDir adds all templates in templateDir to s.
 func (s *SourceState) addTemplatesDir(templateDir string) error {
-	templateDirPrefix := templateDir + "/"
 	return vfs.WalkSlash(s.system, templateDir, func(templatePath string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -661,7 +664,7 @@ func (s *SourceState) addTemplatesDir(templateDir string) error {
 			if err != nil {
 				return err
 			}
-			name := mustTrimPrefix(templatePath, templateDirPrefix)
+			name := mustTrimPrefix(templatePath, templateDir+"/")
 			tmpl, err := template.New(name).Option(s.templateOptions...).Funcs(s.templateFuncs).Parse(string(contents))
 			if err != nil {
 				return err
@@ -722,7 +725,6 @@ func (s *SourceState) newSourceStateDir(sourcePath string, da DirAttributes) *So
 	targetStateDir := &TargetStateDir{
 		perm: da.Perm(),
 	}
-
 	return &SourceStateDir{
 		path:             sourcePath,
 		Attributes:       da,
@@ -740,8 +742,7 @@ func (s *SourceState) newSourceStateFile(sourcePath string, fa FileAttributes, t
 			if !fa.Encrypted {
 				return contents, nil
 			}
-			// FIXME pass targetName as filenameHint
-			return s.encryptionTool.Decrypt(sourcePath, contents)
+			return s.encryptionTool.Decrypt(path.Base(targetName), contents)
 		},
 	}
 
